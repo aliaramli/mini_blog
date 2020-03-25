@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from .models import Post
+from taggit.models import Tag
 
 # Create your views here.
 class PostList(generic.ListView):
@@ -17,7 +18,7 @@ def tagged(request, slug):
     posts = Post.objects.filter(tags=tag)
     context = {
         'tag':tag,
-        'posts':posts,
+        'post_list':posts,
     }
     return render(request, 'index.html', context)
 

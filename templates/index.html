@@ -42,6 +42,12 @@
                     <p class="card-text text-muted h6">{{ post.author }} | {{ post.created_on}} </p>
                     <img class="card-img-top" src="{{ post.cover.url}}" alt="{{ post.title }}">
                     <p class="card-text">{{post.content|slice:":200" }}</p>
+                    <div style="display:flex">
+                      {% for tag in post.tags.all %}
+                      <a href="{% url 'tagged' tag.slug %}" class="mr-1 badge badge-info">#{{ tag }}</a>
+                      {% endfor %}
+                    </div>
+                    <br/>
                     <a href="{% url 'post_detail' post.slug  %}" class="btn btn-primary">Read More &rarr;</a>
                 </div>
             </div>
