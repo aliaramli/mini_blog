@@ -19,7 +19,7 @@ class Post(models.Model):
     author = models.ForeignKey (User, on_delete=models.CASCADE, related_name='blog_posts')
     updated_on = models.DateTimeField(auto_now= True)
     cover = models.ImageField(upload_to='images/', default='images/default.png')
-    content = models.TextField()
+    content = models.TextField( blank=True)
     created_on = models.DateTimeField(auto_now = True)
     status = models.IntegerField(choices=STATUS, default=0)
     tags = TaggableManager()
