@@ -21,8 +21,11 @@ from register import views as v
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include("django.contrib.auth.urls")),
     path('', include('blog.urls')),
     path('register/', v.register, name='register'),
+    path('accounts/profile/', v.UserProfile.as_view(), name='profile')
+
 ]
 
 if settings.DEBUG: # new
