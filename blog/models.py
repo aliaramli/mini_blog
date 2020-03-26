@@ -29,6 +29,22 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+from time import sleep
+import re
+from datetime import datetime, timedelta
+import requests
 
+class Data():
+    def __init__(self, data):
+        self.confirmed = data[0]['confirmed']
+        self.dead = data[0]['dead']
+        self.recovered = data[0]['recovered']
 
+class Coronavirus():
+    def __init__(self): 
+        pass
 
+    def get_data(self):
+        payload = {"country_code":"MY", "start_date": datetime.today().strftime('%Y-%m-%d'), "end_date": (datetime.today()+timedelta(days=1)).strftime('%Y-%m-%d')}
+        response = requests.get("http://api.coronatracker.com/analytics/trend/country", params=payload)
+        return Data(response.json())
