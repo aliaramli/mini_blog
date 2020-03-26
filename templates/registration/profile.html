@@ -12,6 +12,38 @@
 </div>
   </div>
 </div>
+{% if user.role == 1 %} 
+<div class="container">
+    <div class="row"> 
+        <a href="http://aliaramli.pythonanywhere.com/blog/create/"
+           class="btn btn-danger">Create Post</a>
+    </div>
+</div>
 
+<div class="container">
+    <div class="row">
+        <!-- Blog Entries Column -->
+        <div class="col-md-8 mt-3 left">
+        <h1>Blog Entries </h1>
+            {% for post in post_list %}
+            <div class="card mb-4">
+
+                <div class="card-body">
+                    <h2 class="card-title">{{ post.title }}</h2>
+                    {% with post.status as status_index %}
+                    <p class="card-text text-muted h6">{{ post.author }} | {{ post.created_on }} | {{ post.status }} | {{ status.status_index }} </p>
+                    {% endwith %}
+                    <div style="display:flex">
+                      {% for tag in post.tags.all %}
+                      <a href="{% url 'tagged' tag.slug %}" class="mr-1 badge badge-info">#{{ tag }}</a>
+                      {% endfor %}
+                    </div>
+                    <br/>           
+                    <a href="{% url 'post_detail' post.slug  %}" class="btn btn-primary">View &rarr;</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+{% endif %}     
 {% endblock content %}
 
