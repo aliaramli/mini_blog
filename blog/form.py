@@ -6,4 +6,4 @@ class CustomForm(forms.ModelForm):
     class Meta:
         model = Post
         exclude = []
-
+        fields = ('title', 'slug','cover','content','tags', 'status') 

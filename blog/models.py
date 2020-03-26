@@ -1,8 +1,15 @@
 from django.db import models
-from django.contrib.auth.models import User
 from taggit.managers import TaggableManager
 
 # Create your models here.
+from django.contrib.auth.models import AbstractUser
+ROLE = (
+        (0, "Visitor"),
+        (1, "Editor")
+        )
+
+class CustomUser(AbstractUser):
+    role = models.IntegerField(choices=ROLE, default=0)
 
 STATUS = (
         (0, "Draft"),
@@ -16,7 +23,7 @@ class Post(models.Model):
     title = models.CharField(max_length=60, unique=True)
     # Shorter slug also easy to be processed by GOOGLE
     slug  = models.SlugField(max_length=60, unique=True)
-    author = models.ForeignKey (User, on_delete=models.CASCADE, related_name='blog_posts')
+    author = models.ForeignKey (CustomUser, on_delete=models.CASCADE, related_name='blog_posts')
     updated_on = models.DateTimeField(auto_now= True)
     cover = models.ImageField(upload_to='images/', default='images/default.png')
     content = models.TextField( blank=True)
@@ -45,6 +52,6 @@ class Coronavirus():
         pass
 
     def get_data(self):
-        payload = {"country_code":"MY", "start_date": datetime.today().strftime('%Y-%m-%d'), "end_date": (datetime.today()+timedelta(days=1)).strftime('%Y-%m-%d')}
+        payload = {"country_code":"MY", "start_date": datetime.today().strftime('%Y-%m-%d'), "end_date": datetime.today().strftime('%Y-%m-%d')}
         response = requests.get("http://api.coronatracker.com/analytics/trend/country", params=payload)
         return Data(response.json())
