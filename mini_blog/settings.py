@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['aliaramli.pythonanywhere.com']
 
+CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 # Application definition
 
@@ -38,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog',
-    'taggit'
+    'taggit',
+    'crispy_forms',
+    'register.apps.RegisterConfig'
 ]
 
 MIDDLEWARE = [
