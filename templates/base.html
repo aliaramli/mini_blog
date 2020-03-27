@@ -46,14 +46,16 @@
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item text-black">
                             {% if user.is_authenticated %}
-                            <a class="nav-link text-black font-weight-bold" href="accounts/login">Login</a>
+                            <a class="nav-link text-black font-weight-bold" href="/accounts/logout">Logout</a>
                             {% else %}
-                            <a class="nav-link text-black font-weight-bold" href="accounts/logout">Logout</a>
+                            <a class="nav-link text-black font-weight-bold" href="/accounts/login">Login</a>
                             {% endif%}
                         </li>
+                            {% if user.is_authenticated %}
                         <li class="nav-item text-black">
-                            <a class="nav-link text-black font-weight-bold" href="#">Policy</a>
+                            <a class="nav-link text-black font-weight-bold" href="/accounts/profile">Account</a>
                         </li>
+                           {% endif %}
                         <li class="nav-item text-black">
                             <a class="nav-link text-black font-weight-bold" href="#">Contact</a>
                         </li>
