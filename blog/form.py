@@ -1,5 +1,5 @@
 import django.forms as forms
-from .models import Post
+from .models import Post,Comment
 class CustomForm(forms.ModelForm):
     content = forms.CharField(strip=False, widget=forms.Textarea)
 
@@ -7,3 +7,10 @@ class CustomForm(forms.ModelForm):
         model = Post
         exclude = []
         fields = ('title', 'slug','cover','content','tags', 'status') 
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('body',)
+

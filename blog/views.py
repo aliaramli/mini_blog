@@ -1,8 +1,15 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
-from .models import Post, Coronavirus
+from .models import Post, Coronavirus, Preference
 from taggit.models import Tag
+from .form import CustomForm, CommentForm
+from datetime import datetime
+from django.http import HttpResponseRedirect
 
+import logging
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 def postlist(request):
     post = Post.objects.filter(status=2).order_by('-created_on')
@@ -13,9 +20,48 @@ def postlist(request):
               }
     return render(request, 'index.html', context)
 
-class PostDetail(generic.DetailView):
-    model = Post
+
+def post_detail(request, slug):
     template_name = 'post_detail.html'
+    corona = Coronavirus().get_data()
+    post = get_object_or_404(Post, slug=slug)
+    comments = post.comments.filter(active=True)
+    preferences = post.preferences.filter(value=1)
+    new_comment = None
+    error_message = None
+    logger.error(request.POST)
+    comment_form = CommentForm()
+    
+    if request.method == 'POST' and  not request.POST.get('value'):
+        comment_form = CommentForm(data=request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.post = post
+            new_comment.author = request.user
+            new_comment.save()
+    
+    elif request.method == 'POST' and request.POST.get('value'):   
+        if not request.user.is_authenticated:
+            error_message = "You need to login first"
+        else:
+            existing_preference = Preference.objects.filter(author=request.user)
+            if not existing_preference:
+                preference = Preference()
+                preference.author = request.user
+                preference.post = post
+                preference.value = request.POST.get('value')
+                preference.save()
+            else :
+                error_message = "You have liked before!"
+     
+   
+    return render(request, template_name, {'post': post,
+                                           'comments': comments,
+                                           'new_comment': new_comment,
+                                           'comment_form': comment_form,
+                                           'corona':corona,
+                                           'preferences':preferences,
+                                           'error_message': error_message})
 
 def tagged(request, slug):
     tag = get_object_or_404(Tag, slug=slug)
@@ -27,9 +73,7 @@ def tagged(request, slug):
     }
     return render(request, 'index.html', context)
 
-from .form import CustomForm
-from datetime import datetime
-from django.http import HttpResponseRedirect
+
 def userposts_create_view(request):
     form = CustomForm(request.POST or None)
 
@@ -42,7 +86,5 @@ def userposts_create_view(request):
         return HttpResponseRedirect("/") 
     context = {'form':form,}
     return render(request, 'create-post-view.html',context)
-
-
 
 

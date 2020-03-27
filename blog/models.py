@@ -55,3 +55,29 @@ class Coronavirus():
         payload = {"country_code":"MY", "start_date": datetime.today().strftime('%Y-%m-%d'), "end_date": datetime.today().strftime('%Y-%m-%d')}
         response = requests.get("http://api.coronatracker.com/analytics/trend/country", params=payload)
         return Data(response.json())
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post,on_delete=models.CASCADE,related_name='comments')
+    author = models.ForeignKey (CustomUser, on_delete=models.CASCADE, related_name='comments')
+    body = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    active = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['created_on']
+
+    def __str__(self):
+        return 'Comment {} by {}'.format(self.body, self.author)
+
+class Preference(models.Model):
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='preferences')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='preferences')
+    value = models.IntegerField()
+    date = models.DateTimeField(auto_now= True)
+
+    
+    def __str__(self):
+        return str(self.author) + ':' + str(self.post) +':' + str(self.value)
+
+    class Meta:
+       unique_together = ("author", "post", "value")
