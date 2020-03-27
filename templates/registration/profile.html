@@ -14,17 +14,12 @@
 </div>
 {% if user.role == 1 %} 
 <div class="container">
-    <div class="row"> 
-        <a href="http://aliaramli.pythonanywhere.com/blog/create/"
-           class="btn btn-danger">Create Post</a>
-    </div>
-</div>
-
-<div class="container">
     <div class="row">
         <!-- Blog Entries Column -->
         <div class="col-md-8 mt-3 left">
-        <h1>Blog Entries </h1>
+        <h1>Blog Entries   <a href="/blog/create/"
+           class="btn btn-danger">Create New Post</a> </h1>
+       
             {% for post in post_list %}
             <div class="card mb-4">
 
