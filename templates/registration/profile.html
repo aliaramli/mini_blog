@@ -1,16 +1,21 @@
-{% extends '../base.html' %} {% block content %}
+{% extends '../base.html' %}
+{% block content %}
 
 <div class="container">
   <div class="row">
-    <div class="col-md-8 card mb-4  mt-3 left  top">
-      <div class="card-body">
-        <h1>{% block title %} My Account {% endblock title %}</h1>
+        <div class="col-md-8 mt-3 left">
+        <h1> My Account <a href="{% url 'password_change' %}"
+           class="btn btn-danger">Change Password</a></h1>
+        <div class="card mb-4">
+        <div class="card-body">
         <p class=" text-muted">{{ user.username }} </p>
         <p class="card-text ">{{ user.email | safe }}</p>
         <br/>
+
   </div>
 </div>
   </div>
+</div>
 </div>
 {% if user.role == 1 %} 
 <div class="container">
@@ -26,7 +31,7 @@
                 <div class="card-body">
                     <h2 class="card-title">{{ post.title }}</h2>
                     {% with post.status as status_index %}
-                    <p class="card-text text-muted h6">{{ post.author }} | {{ post.created_on }} | {{ post.status }} | {{ status.status_index }} </p>
+                    <p class="card-text text-muted h6">{{ post.author }} | {{ post.created_on }} | {% ifequal post.status 1%} <font color="red">Pending for approval</font> {% else %} <font color="green">Published</font> {% endifequal%}</p>
                     {% endwith %}
                     <div style="display:flex">
                       {% for tag in post.tags.all %}
@@ -39,6 +44,32 @@
             </div>
             {% endfor %}
         </div>
-{% endif %}     
-{% endblock content %}
+{% endif %}    
+<div class="container">
+    <div class="row">
+        <!-- Liked Posts -->
+        <div class="col-md-8 mt-3 left">
+            <h1>Liked Blog Posts ({{liked_posts.count}}) </h1>
+            {% for pref in liked_posts %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">{{ pref.post.title }}</h2>
+                    {% with pref.post.status as status_index %}
+                    <p class="card-text text-muted h6">{{ pref.post.author }} | {{ pref.post.created_on }} | {{ status.status_index }} </p>
+                    {% endwith %}
+                    <div style="display:flex">
+                      {% for tag in pref.post.tags.all %}
+                      <a href="{% url 'tagged' tag.slug %}" class="mr-1 badge badge-info">#{{ tag }}</a>
+                      {% endfor %}
+                    </div>
+                    <br/>           
+                    <a href="{% url 'post_detail' pref.post.slug  %}" class="btn btn-primary">View &rarr;</a>
+                </div>
+            </div>
+            {% endfor %}
+            </div>
+            </div>
+        </div>
+
+{% endblock %}
 
