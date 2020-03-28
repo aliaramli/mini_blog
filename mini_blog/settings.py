@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'blog',
     'taggit',
     'crispy_forms',
-    'register.apps.RegisterConfig'
+    'register.apps.RegisterConfig',
+    'reset_migrations',
 ]
 
 MIDDLEWARE = [
