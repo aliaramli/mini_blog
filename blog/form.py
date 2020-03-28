@@ -8,6 +8,13 @@ class CustomForm(forms.ModelForm):
         exclude = []
         fields = ('title', 'slug','cover','content','tags', 'status') 
 
+class CustomUserBlogPostForm(forms.ModelForm):
+    content = forms.CharField(strip=False, widget=forms.Textarea)
+
+    class Meta:
+        model = Post
+        exclude = []
+        fields = ('title', 'slug','cover','content','tags') 
 
 class CommentForm(forms.ModelForm):
     class Meta:
