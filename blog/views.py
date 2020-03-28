@@ -2,10 +2,11 @@ from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from .models import Post, Coronavirus, Preference
 from taggit.models import Tag
-from .form import CustomForm, CommentForm
+import taggit
+from .form import CustomForm, CommentForm, CustomUserBlogPostForm
 from datetime import datetime
 from django.http import HttpResponseRedirect
-
+from django.core.files.storage import FileSystemStorage
 import logging
 
 # Get an instance of a logger
@@ -75,15 +76,27 @@ def tagged(request, slug):
 
 
 def userposts_create_view(request):
-    form = CustomForm(request.POST or None)
-
+    form = CustomUserBlogPostForm(request.POST or None)
+    logger.error(request.FILES)
     if request.method == "POST":
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
             post.published_date = datetime.now()
+            post.status = 1
+            logger.error(request.POST)
+            cover = request.FILES.get('cover')
+            if cover:
+                fs = FileSystemStorage()
+                filename = fs.save(cover.name, cover)
+                logger.error(cover.name)
+                post.cover = cover.name
             post.save()
-        return HttpResponseRedirect("/") 
+            tags = request.POST.get('tags')
+            tag_list = taggit.utils._parse_tags(tags)
+            post.tags.add(*tag_list)
+            post.save()         
+        return HttpResponseRedirect("/accounts/profile") 
     context = {'form':form,}
     return render(request, 'create-post-view.html',context)
 
