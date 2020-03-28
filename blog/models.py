@@ -40,20 +40,26 @@ from time import sleep
 import re
 from datetime import datetime, timedelta
 import requests
+import logging
 
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 class Data():
     def __init__(self, data):
-        self.confirmed = data[0]['confirmed']
-        self.dead = data[0]['dead']
-        self.recovered = data[0]['recovered']
+        if data:
+            self.confirmed = data[0]['confirmed']
+            self.dead = data[0]['dead']
+            self.recovered = data[0]['recovered']
+
 
 class Coronavirus():
     def __init__(self): 
         pass
 
     def get_data(self):
-        payload = {"country_code":"MY", "start_date": datetime.today().strftime('%Y-%m-%d'), "end_date": datetime.today().strftime('%Y-%m-%d')}
+        payload = {"country_code":"MY", "start_date": (datetime.today()-timedelta(days=1)).strftime('%Y-%m-%d'), "end_date": datetime.today().strftime('%Y-%m-%d')}
         response = requests.get("http://api.coronatracker.com/analytics/trend/country", params=payload)
+        logger.error(response.json())
         return Data(response.json())
 
 class Comment(models.Model):
