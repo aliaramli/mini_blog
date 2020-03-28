@@ -16,7 +16,7 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = (
 
         (                      # new fieldset added on to the bottom
-            'User registered as',  # group heading of your choice; set to None for a blank space instead of a header
+            'User additional info',  # group heading of your choice; set to None for a blank space instead of a header
             {
                 'fields': (
                     'role',
