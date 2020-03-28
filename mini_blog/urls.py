@@ -18,12 +18,16 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from register import views as v
+from django.contrib.auth import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/register/', v.register, name='register'),
     path('accounts/profile/', v.UserProfile.as_view(), name='profile'),
-    path('accounts/', include("django.contrib.auth.urls")),
+    path('accounts/logout/', views.LogoutView.as_view(), name='logout'),
+    path('accounts/login/', views.LoginView.as_view(), name='login'),
+    path('accounts/password-change/', views.PasswordChangeView.as_view(), name='password_change'),
+    path('accounts/password-change/done/', views.PasswordChangeDoneView.as_view(), name='password_change_done'),
     path('', include('blog.urls')),
 ]
 
